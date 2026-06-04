@@ -572,12 +572,8 @@
       </div>
     </div>
 
-    <div class="section-label">Daily Checklist</div>
-    <div class="checklist-card" id="checklist"></div>
-
-    <div class="section-label" style="margin-top:20px;">Today's Schedule</div>
+    <div class="section-label">Today's Schedule</div>
     <div class="checklist-card">
-      <div style="font-family:'Fraunces',serif;font-size:13px;color:var(--muted);padding:4px 0 12px;border-bottom:1px solid var(--border);">8-week-old recommended routine</div>
       <div id="schedule-list-today"></div>
     </div>
 
@@ -614,16 +610,31 @@
     </div>
   </div>
 
-  <!-- TAB: SCHEDULE -->
-  <div class="tab-content" id="tab-schedule">
-    <div class="section-label">Puppy Daily Schedule</div>
-    <div class="checklist-card">
-      <div style="font-family:'Fraunces',serif;font-size:14px;color:var(--muted);padding:4px 0 12px;border-bottom:1px solid var(--border);">8-week-old recommended routine</div>
-      <div id="schedule-list"></div>
+  <!-- TAB: PROGRESS -->
+  <div class="tab-content" id="tab-progress">
+
+    <div class="section-label">Overall Stats</div>
+    <div class="summary-bar" style="margin-bottom:10px;">
+      <div class="summary-stat">
+        <div class="summary-num" id="prog-streak">0</div>
+        <div class="summary-label">🔥 Streak</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-num" id="prog-skills-mastered">0</div>
+        <div class="summary-label">⭐ Mastered</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-num" id="prog-total-sessions">0</div>
+        <div class="summary-label">🎓 Sessions</div>
+      </div>
     </div>
+
+    <div class="section-label">Skills Progress</div>
+    <div class="checklist-card" id="prog-skills-list"></div>
 
     <div class="section-label">8-Week Milestones</div>
     <div class="checklist-card" id="milestones-list"></div>
+
   </div>
 
 </div>
@@ -636,8 +647,8 @@
   <div class="nav-item" onclick="switchTab('skills',this)">
     <span class="nav-icon">🎓</span>Skills
   </div>
-  <div class="nav-item" onclick="switchTab('schedule',this)">
-    <span class="nav-icon">📋</span>Schedule
+  <div class="nav-item" onclick="switchTab('progress',this)">
+    <span class="nav-icon">📈</span>Progress
   </div>
 </div>
 
@@ -656,20 +667,7 @@ const TIPS = [
   "Socialization window closes around 12–16 weeks. Expose to new sounds, surfaces, and friendly people now.",
 ];
 
-const CHECKLIST_ITEMS = [
-  { id: 'morning-potty', text: 'Morning potty break', icon: '🌅' },
-  { id: 'breakfast', text: 'Breakfast served', icon: '🍽️' },
-  { id: 'post-meal-potty', text: 'Post-meal potty break', icon: '🚽' },
-  { id: 'training-session', text: 'Training session (5 min)', icon: '🎓' },
-  { id: 'socialization', text: 'Socialization / new experience', icon: '🌍' },
-  { id: 'nap', text: 'Nap in crate', icon: '😴' },
-  { id: 'afternoon-potty', text: 'Afternoon potty', icon: '☀️' },
-  { id: 'playtime', text: 'Supervised playtime', icon: '🎾' },
-  { id: 'evening-potty', text: 'Evening potty break', icon: '🌆' },
-  { id: 'dinner', text: 'Dinner served', icon: '🍽️' },
-  { id: 'bedtime-potty', text: 'Bedtime potty', icon: '🌙' },
-  { id: 'crate-settle', text: 'Crate settle for bedtime', icon: '🏠' },
-];
+// CHECKLIST_ITEMS removed — schedule items are used directly
 
 const SKILLS = [
   {
@@ -795,27 +793,27 @@ const SKILLS = [
 ];
 
 const SCHEDULE = [
-  { time: '6:00 AM', activity: 'Wake up & immediate potty outside', icon: '🌅' },
-  { time: '6:15 AM', activity: 'Breakfast in crate', icon: '🍽️' },
-  { time: '6:30 AM', activity: 'Potty break after eating', icon: '🚽' },
-  { time: '6:45 AM', activity: 'Play & socialization time', icon: '🎾' },
-  { time: '8:00 AM', activity: 'Potty break then crate nap', icon: '😴' },
-  { time: '10:00 AM', activity: 'Wake, potty break', icon: '🚽' },
-  { time: '10:15 AM', activity: 'Training session (5 min)', icon: '🎓' },
-  { time: '10:30 AM', activity: 'Play & explore', icon: '🐾' },
-  { time: '11:30 AM', activity: 'Potty then crate nap', icon: '😴' },
-  { time: '1:00 PM', activity: 'Wake, potty break', icon: '🚽' },
-  { time: '1:15 PM', activity: 'Lunch in crate', icon: '🍽️' },
-  { time: '1:30 PM', activity: 'Potty break after eating', icon: '🚽' },
-  { time: '2:00 PM', activity: 'Training & socialization', icon: '🎓' },
-  { time: '3:00 PM', activity: 'Crate nap', icon: '😴' },
-  { time: '4:30 PM', activity: 'Wake, potty break', icon: '🚽' },
-  { time: '4:45 PM', activity: 'Play & outdoor time', icon: '🌿' },
-  { time: '5:30 PM', activity: 'Dinner in crate', icon: '🍽️' },
-  { time: '5:45 PM', activity: 'Potty after eating', icon: '🚽' },
-  { time: '7:00 PM', activity: 'Calm play, settle practice', icon: '🌙' },
-  { time: '8:30 PM', activity: 'Final potty break', icon: '🚽' },
-  { time: '9:00 PM', activity: 'Bedtime in crate', icon: '🏠' },
+  { id: 'wake-potty',       time: '6:00 AM', activity: 'Wake up & immediate potty outside', icon: '🌅' },
+  { id: 'breakfast',        time: '6:15 AM', activity: 'Breakfast in crate', icon: '🍽️' },
+  { id: 'post-bfast-potty', time: '6:30 AM', activity: 'Potty break after eating', icon: '🚽' },
+  { id: 'morning-play',     time: '6:45 AM', activity: 'Play & socialization time', icon: '🎾' },
+  { id: 'morning-nap',      time: '8:00 AM', activity: 'Potty break then crate nap', icon: '😴' },
+  { id: 'mid-potty-1',      time: '10:00 AM', activity: 'Wake, potty break', icon: '🚽' },
+  { id: 'training-1',       time: '10:15 AM', activity: 'Training session (5 min)', icon: '🎓' },
+  { id: 'mid-play',         time: '10:30 AM', activity: 'Play & explore', icon: '🐾' },
+  { id: 'mid-nap',          time: '11:30 AM', activity: 'Potty then crate nap', icon: '😴' },
+  { id: 'lunch-potty',      time: '1:00 PM', activity: 'Wake, potty break', icon: '🚽' },
+  { id: 'lunch',            time: '1:15 PM', activity: 'Lunch in crate', icon: '🍽️' },
+  { id: 'post-lunch-potty', time: '1:30 PM', activity: 'Potty break after eating', icon: '🚽' },
+  { id: 'training-2',       time: '2:00 PM', activity: 'Training & socialization', icon: '🎓' },
+  { id: 'afternoon-nap',    time: '3:00 PM', activity: 'Crate nap', icon: '😴' },
+  { id: 'afternoon-potty',  time: '4:30 PM', activity: 'Wake, potty break', icon: '🚽' },
+  { id: 'afternoon-play',   time: '4:45 PM', activity: 'Play & outdoor time', icon: '🌿' },
+  { id: 'dinner',           time: '5:30 PM', activity: 'Dinner in crate', icon: '🍽️' },
+  { id: 'post-dinner-potty',time: '5:45 PM', activity: 'Potty after eating', icon: '🚽' },
+  { id: 'evening-settle',   time: '7:00 PM', activity: 'Calm play, settle practice', icon: '🌙' },
+  { id: 'bedtime-potty',    time: '8:30 PM', activity: 'Final potty break', icon: '🚽' },
+  { id: 'bedtime',          time: '9:00 PM', activity: 'Bedtime in crate', icon: '🏠' },
 ];
 
 const MILESTONES = [
@@ -873,22 +871,22 @@ function startListeners() {
     }
   });
 
-  // Checklist — today only
+  // Schedule checklist — today only
   onValue(ref(db, `days/${todayKey}/checklist`), snap => {
     state.checklist = snap.val() || {};
-    renderChecklist();
+    renderScheduleChecklist();
   });
 
   // Skill sessions — all time
   onValue(ref(db, `skillSessions`), snap => {
     const data = snap.val() || {};
-    // Convert from Firebase push-key objects to arrays per skill
     state.skillSessions = {};
     for (const skillId in data) {
       state.skillSessions[skillId] = Object.values(data[skillId]);
     }
     renderSkills();
     renderSummary();
+    renderProgress();
   });
 
   // Streak
@@ -907,6 +905,8 @@ function startListeners() {
     }
     state.streak = newStreak;
     document.getElementById('streak-count').textContent = newStreak;
+    const progStreak = document.getElementById('prog-streak');
+    if (progStreak) progStreak.textContent = newStreak;
   });
 }
 
@@ -948,21 +948,70 @@ function renderSummary() {
   document.getElementById('sessions-count').textContent = todaySessions;
 }
 
-// ─── CHECKLIST ──────────────────────────────────────────
-function renderChecklist() {
-  const el = document.getElementById('checklist');
-  el.innerHTML = CHECKLIST_ITEMS.map(item => {
+// ─── SCHEDULE CHECKLIST ─────────────────────────────────
+function renderScheduleChecklist() {
+  const el = document.getElementById('schedule-list-today');
+  if (!el) return;
+  el.innerHTML = SCHEDULE.map(item => {
     const done = state.checklist[item.id];
-    return `<div class="checklist-item ${done?'done':''}" onclick="toggleCheck('${item.id}')">
+    return `<div class="checklist-item ${done?'done':''}" onclick="toggleScheduleItem('${item.id}')">
       <div class="check-circle">${done?'✓':''}</div>
-      <span class="check-text">${item.icon} ${item.text}</span>
+      <div style="flex:1;">
+        <div class="check-text">${item.icon} ${item.activity}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${item.time}</div>
+      </div>
     </div>`;
   }).join('');
 }
 
-function toggleCheck(id) {
+function toggleScheduleItem(id) {
   const newVal = !state.checklist[id];
   update(ref(db, `days/${todayKey}/checklist`), { [id]: newVal });
+}
+
+// ─── SCHEDULE (static tab content) ──────────────────────
+function renderSchedule() {
+  document.getElementById('milestones-list').innerHTML = MILESTONES.map(m =>
+    `<div class="checklist-item" style="cursor:default;">
+      <div style="font-size:11px;font-weight:500;color:var(--bark);background:var(--gold-light);padding:3px 8px;border-radius:6px;white-space:nowrap;">${m.week}</div>
+      <span class="check-text" style="font-size:13px;">${m.text}</span>
+    </div>`
+  ).join('');
+}
+
+// ─── PROGRESS ───────────────────────────────────────────
+function renderProgress() {
+  const totalSessions = Object.values(state.skillSessions).reduce((a, s) => a + s.length, 0);
+  const mastered = SKILLS.filter(skill => {
+    const gotIt = (state.skillSessions[skill.id] || []).filter(s => s.outcome==='got-it').length;
+    return gotIt >= skill.goal;
+  }).length;
+
+  const streakEl = document.getElementById('prog-streak');
+  const mastEl = document.getElementById('prog-skills-mastered');
+  const sessEl = document.getElementById('prog-total-sessions');
+  if (streakEl) streakEl.textContent = state.streak;
+  if (mastEl) mastEl.textContent = mastered;
+  if (sessEl) sessEl.textContent = totalSessions;
+
+  const listEl = document.getElementById('prog-skills-list');
+  if (!listEl) return;
+  listEl.innerHTML = SKILLS.map(skill => {
+    const sessions = state.skillSessions[skill.id] || [];
+    const gotIt = sessions.filter(s => s.outcome==='got-it').length;
+    const mastered = gotIt >= skill.goal;
+    const pct = Math.min(100, Math.round((gotIt / skill.goal) * 100));
+    return `<div class="checklist-item" style="cursor:default;flex-direction:column;align-items:flex-start;gap:6px;">
+      <div style="display:flex;align-items:center;gap:8px;width:100%;">
+        <span style="font-size:18px;">${skill.icon}</span>
+        <span style="font-size:13px;font-weight:500;flex:1;">${skill.name}</span>
+        <span style="font-size:11px;color:var(--muted);">${gotIt}/${skill.goal} ✅${mastered?' ⭐':''}</span>
+      </div>
+      <div style="width:100%;height:6px;background:var(--border);border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${mastered?'var(--grass)':'var(--gold)'};border-radius:4px;transition:width 0.4s;"></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ─── SKILLS ─────────────────────────────────────────────
@@ -1082,7 +1131,7 @@ function showToast(msg) {
 
 // expose globals for inline onclick handlers
 window.logPotty = logPotty;
-window.toggleCheck = toggleCheck;
+window.toggleScheduleItem = toggleScheduleItem;
 window.openSession = openSession;
 window.toggleHowTo = toggleHowTo;
 window.selectOutcome = selectOutcome;
