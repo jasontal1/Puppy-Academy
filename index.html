@@ -845,7 +845,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const todayKey = new Date().toISOString().split('T')[0];
+const now = new Date();
+const todayKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
 
 // ─── LOCAL STATE (mirrors Firebase) ─────────────────────
 let state = {
